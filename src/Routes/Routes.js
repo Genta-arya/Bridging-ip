@@ -5,4 +5,4 @@ export const Routes = express.Router();
 
 Routes.get("/ip", GetIP);
 Routes.post("/ip", CreateIP);
-Routes.put("/ip", UpdateIP);
+Routes.put("/ip/:id", UpdateIP);

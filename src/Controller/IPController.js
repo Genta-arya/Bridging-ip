@@ -67,7 +67,7 @@ export const UpdateIP = async (req, res) => {
       });
   
       if (existingIp) {
-        return sendResponse(res, 400, "IP sudah digunakan oleh ID lain");
+        return sendResponse(res, 400, "IP sudah digunakan");
       }
   
       // Update IP jika tidak ada yang sama selain ID sendiri
