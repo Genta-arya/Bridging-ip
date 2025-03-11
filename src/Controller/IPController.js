@@ -39,9 +39,9 @@ export const CreateIP = async (req, res) => {
 export const GetIP = async (req, res) => {
   try {
     const getIp = await prisma.iPAddress.findFirst({});
-    if (getIp) {
+   
       return sendResponse(res, 200, "List IP", getIp);
-    }
+
   } catch (error) {
     sendError(res, error);
   }
