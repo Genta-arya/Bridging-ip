@@ -39,50 +39,46 @@ export const CreateIP = async (req, res) => {
 export const GetIP = async (req, res) => {
   try {
     const getIp = await prisma.iPAddress.findFirst({});
-   
-      return sendResponse(res, 200, "List IP", getIp);
 
+    return sendResponse(res, 200, "List IP", getIp);
   } catch (error) {
     sendError(res, error);
   }
 };
 
 export const UpdateIP = async (req, res) => {
-    const { id } = req.params;
-    const { ip } = req.body;
-    const idInt = parseInt(id, 10);
-    if (!ip) {
-      return sendResponse(res, 400, "IP tidak boleh kosong");
+  const { id } = req.params;
+  const { ip } = req.body;
+  const idInt = parseInt(id, 10);
+  if (!ip) {
+    return sendResponse(res, 400, "IP tidak boleh kosong");
+  }
+
+  try {
+    // Cek apakah IP sudah digunakan oleh ID lain
+    const existingIp = await prisma.iPAddress.findFirst({
+      where: {
+        ip: ip,
+       
+      },
+    });
+
+    if (existingIp) {
+      return sendResponse(res, 400, "IP sudah digunakan");
     }
-  
-    try {
-      // Cek apakah IP sudah digunakan oleh ID lain
-      const existingIp = await prisma.iPAddress.findFirst({
-        where: {
-          ip: ip,
-          NOT: {
-            id: idInt, // Pastikan bukan ID yang sedang diupdate
-          },
-        },
-      });
-  
-      if (existingIp) {
-        return sendResponse(res, 400, "IP sudah digunakan");
-      }
-  
-      // Update IP jika tidak ada yang sama selain ID sendiri
-      const updateIp = await prisma.iPAddress.update({
-        where: {
-          id: id,
-        },
-        data: {
-          ip: ip,
-        },
-      });
-  
-      return sendResponse(res, 200, "IP berhasil diupdate", updateIp);
-    } catch (error) {
-      sendError(res, error);
-    }
-  };
-  
+
+    // Update IP jika tidak ada yang sama selain ID sendiri
+    const updateIp = await prisma.iPAddress.update({
+      where: {
+        id: id,
+      },
+      data: {
+        ip: ip,
+      },
+    });
+
+    return sendResponse(res, 200, "IP berhasil diupdate", updateIp);
+  } catch (error) {
+    sendError(res, error);
+  }
+};
