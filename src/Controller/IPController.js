@@ -49,12 +49,13 @@ export const GetIP = async (req, res) => {
 export const UpdateIP = async (req, res) => {
   const { id } = req.params;
   const { ip } = req.body;
-  const idInt = parseInt(id, 10);
+
   if (!ip) {
     return sendResponse(res, 400, "IP tidak boleh kosong");
   }
 
   try {
+    const idInt = parseInt(id, 10);
     // Cek apakah IP sudah digunakan oleh ID lain
     const existingIp = await prisma.iPAddress.findFirst({
       where: {
@@ -70,7 +71,7 @@ export const UpdateIP = async (req, res) => {
     // Update IP jika tidak ada yang sama selain ID sendiri
     const updateIp = await prisma.iPAddress.update({
       where: {
-        id: id,
+        id: idInt,
       },
       data: {
         ip: ip,
